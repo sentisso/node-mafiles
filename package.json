@@ -1,0 +1,45 @@
+{
+  "name": "mafiles",
+  "version": "1.0.0",
+  "description": "Parser for Steam Desktop Authenticator's (SDA) maFiles.",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "dev": "tsc-watch",
+    "build": "tsc",
+    "push": "tsc && npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SenTisso/node-mafiles.git"
+  },
+  "author": {
+    "name": "sentisso",
+    "url": "https://github.com/SenTisso",
+    "email": "sentisso.dev@gmail.com"
+  },
+  "keywords": [
+    "steam",
+    "csgo",
+    "sda",
+    "mafiles",
+    "mafile"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SenTisso/node-mafiles/issues"
+  },
+  "homepage": "https://github.com/SenTisso/node-mafiles",
+  "dependencies": {
+    "@types/node": "^12.7.5",
+    "@types/read": "^0.0.29",
+    "fs": "^0.0.1-security",
+    "read": "^1.0.7"
+  },
+  "devDependencies": {
+    "tsc": "^2.0.3",
+    "tsc-watch": "^4.6.0",
+    "typescript": "^3.6.3",
+    "ts-node": "^8.3.0"
+  }
+}
