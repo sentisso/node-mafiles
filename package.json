@@ -1,6 +1,6 @@
 {
   "name": "mafiles",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Parser for Steam Desktop Authenticator's (SDA) maFiles.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
