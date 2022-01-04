@@ -51,11 +51,11 @@ async function decryptData(password: string, encryptionSalt: string, encryptionI
  * @param manifestPath Path to the SDA manifest.json file containing more information about the maFiles.
  * @param steamid64 steamid64 of the steam account that we want the maFile of.
  * @param options All optional.
- * @param options.password The password that was used for encrypting the SDA. Define this for an instant encryption.
+ * @param options.password The password that was used for encrypting the SDA. Define this for an instant decryption.
  * @param options.maFilePath This allows you to directly specify where the targeted maFile is located.
  * @returns Either the JSON parsed maFile in case of a success or `null` in case of an error.
  * @example
- * const maFile = await getMaFile("./SDA/manifest.json", 76561197960287930, {
+ * const maFile = await mafiles("./SDA/manifest.json", 76561197960287930, {
  *     password: "3ncrypt10n_Passw0rd",
  *     maFilePath: "./SDA/maFiles/account.maFile"
  * })
