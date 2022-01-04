@@ -60,7 +60,7 @@ async function decryptData(password: string, encryptionSalt: string, encryptionI
  *     maFilePath: "./SDA/maFiles/account.maFile"
  * })
  */
-async function getMaFile(manifestPath: string, steamid64: number, options: Options|null = null): Promise<maFile | null> {
+export default async function mafiles(manifestPath: string, steamid64: number, options: Options|null = null): Promise<maFile | null> {
     const manifest: Manifest = require(manifestPath)
 
     const entry = manifest.entries.find((entry: Entry) => entry.steamid === steamid64)
@@ -89,5 +89,3 @@ async function getMaFile(manifestPath: string, steamid64: number, options: Optio
 
     return null
 }
-
-module.exports = getMaFile
