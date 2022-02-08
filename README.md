@@ -13,17 +13,17 @@ This package also supports decryption of the `maFiles` _(if they were encrypted 
 ```ts
 import mafiles from 'mafiles';
 
-const maFile = await mafiles("./SDA/manifest.json", 76561197960287930, {
+const maFile = await mafiles("./SDA/manifest.json", "76561197960287930", {
     password: "3ncrypt10n_Passw0rd",
     maFilePath: "./SDA/maFiles/account.maFile"
 })
 
 if (maFile != null) console.log(maFile.shared_secret) // 'shared_secret of the account'
 ```
-or as a `.then()` callback
+or as a `.then()` callback, where the steamid64 is passed as a BigInt
 ```ts
 // here if the file is encrypted, the user will be prompted to enter the password
-mafiles("./SDA/manifest.json", 76561197960287930, {
+mafiles("./SDA/manifest.json", 76561197960287930n, {
     maFilePath: "./SDA/maFiles/account.maFile"
 }).then(maFile => {
     
@@ -35,7 +35,7 @@ mafiles("./SDA/manifest.json", 76561197960287930, {
 # Parameters and options
 `mafiles(manifestPath, steamid64, options)`
 - `manifestPath: string` Path to the SDA manifest.json file containing more information about the maFiles.
-- `steamid64: number` steamid64 of the steam account that we want the maFile of.
+- `steamid64: string | BigInt` steamid64 of the steam account that we want the maFile of (only as a string or a native BigInt).
 - `options: object` These are optional.
   - `password: string` The password that was used for encrypting the SDA. Define this for an instant decryption. If the maFile is encrypted and this is not defined, then the user will be prompted for the password via STDIN
   - `maFilePath: string` This allows you to directly specify where the targeted maFile is located. If this option is not defined then it is assumed that the maFile is located in the same folder as the specified `manifest.json` and that it's name is `steamid64.maFile` - where `steamid64` is also already specified.
@@ -62,15 +62,16 @@ If the parsing (and decryption) of the specified `maFile` were successful, then 
         SteamLoginSecure: string,
         WebCookie: string,
         OAuthToken: string,
-        SteamID: number
+        SteamID: BigInt
     }
 }
 ```
 If something went wrong, then an error will be thrown _(so don't forget to catch it)_. Otherwise the function will return `null`. Most common error scenarios:
 1. the specified `manifest.json` file wasn't found
 2. the `maFile` of the specified account wasn't found
-3. incorrect decryption password was given
-4. the files are corrupted, invalid JSON etc.
+3. the given steamid64 is a number, has to be a string or a native BigInt
+4. incorrect decryption password was given
+5. the files are corrupted, invalid JSON etc.
 
 # Contribution
 Feel free to create a pull request!

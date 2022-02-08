@@ -4,6 +4,7 @@ import {promises as fs} from "fs";
 import {readPromise} from "./utils";
 import {Manifest, maFile, Options} from "./types/sda";
 import {Entry} from "./types/sda";
+const JSONbig = require('json-bigint')({ useNativeBigInt: true });
 
 /*
  * Based on https://github.com/Jessecar96/SteamDesktopAuthenticator/blob/8a408f13ee24f70fffbc409cb0e050e924f4fe94/Steam%20Desktop%20Authenticator/FileEncryptor.cs#L20
@@ -48,23 +49,29 @@ async function decryptData(password: string, encryptionSalt: string, encryptionI
  * If the maFile is encrypted and the password option isn't set, then the user will be prompted for the encryption password
  * via STDIN.
  *
- * @param manifestPath Path to the SDA manifest.json file containing more information about the maFiles.
- * @param steamid64 steamid64 of the steam account that we want the maFile of.
+ * @param {string} manifestPath Path to the SDA manifest.json file containing more information about the maFiles.
+ * @param {(string|BigInt)} steamid64 steamid64 of the steam account that we want the maFile of.
  * @param options All optional.
- * @param options.password The password that was used for encrypting the SDA. Define this for an instant decryption.
- * @param options.maFilePath This allows you to directly specify where the targeted maFile is located.
+ * @param {string} options.password The password that was used for encrypting the SDA. Define this for an instant decryption.
+ * @param {string} options.maFilePath This allows you to directly specify where the targeted maFile is located.
  * @returns Either the JSON parsed maFile in case of a success or `null` in case of an error.
  * @example
- * const maFile = await mafiles("./SDA/manifest.json", 76561197960287930, {
+ * const maFile = await mafiles("./SDA/manifest.json", "76561197960287930", {
  *     password: "3ncrypt10n_Passw0rd",
  *     maFilePath: "./SDA/maFiles/account.maFile"
  * })
  */
-export default async function mafiles(manifestPath: string, steamid64: number, options: Options|null = null): Promise<maFile | null> {
-    const manifest: Manifest = require(manifestPath)
+export default async function mafiles(manifestPath: string, steamid64: string | BigInt, options: Options|null = null): Promise<maFile | null> {
+    const manifest: Manifest = JSONbig.parse((await fs.readFile(manifestPath)).toString())
+
+    if (typeof steamid64 === "string")
+        steamid64 = BigInt(steamid64)
+
+    else if (typeof steamid64 !== "bigint")
+        throw new Error(`The provided steamid64 ${steamid64} (${typeof steamid64}) is not a string nor a native BigInt.${typeof steamid64 === 'number' ? " The ID can't be used as a number due to JS limitations." : ""}`)
 
     const entry = manifest.entries.find((entry: Entry) => entry.steamid === steamid64)
-    if (entry == null) throw new Error(`Entry with the specified steamid64 ${steamid64} was not found in ${manifest}`)
+    if (entry == null) throw new Error(`Entry with the specified steamid64 ${steamid64} was not found in ${manifestPath}`)
 
     const maFilePath = (options && options.maFilePath && options.maFilePath.length > 0) ? options.maFilePath : path.dirname(manifestPath) + `/${entry.filename}`
 
@@ -81,10 +88,10 @@ export default async function mafiles(manifestPath: string, steamid64: number, o
 
         if (password == null || password.length <= 0 || typeof password !== "string") throw new Error("The encryption password was not specified or is not of type string or has a length of 0")
 
-        return JSON.parse(await decryptData(password, entry.encryption_salt, entry.encryption_iv, maFile.toString()))
+        return JSONbig.parse(await decryptData(password, entry.encryption_salt, entry.encryption_iv, maFile.toString()))
 
     } else {
-        return JSON.parse(maFile.toString())
+        return JSONbig.parse(maFile.toString())
     }
 
     return null

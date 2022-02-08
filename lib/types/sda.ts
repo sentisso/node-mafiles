@@ -13,7 +13,7 @@ export interface Entry {
     encryption_iv: string,
     encryption_salt: string,
     filename: string,
-    steamid: number
+    steamid: BigInt
 }
 
 export interface maFile {
@@ -38,7 +38,7 @@ export interface Session {
     SteamLoginSecure: string,
     WebCookie: string,
     OAuthToken: string,
-    SteamID: number
+    SteamID: BigInt
 }
 
 export interface Options {
