@@ -16,7 +16,7 @@ export interface Entry {
     steamid: BigInt
 }
 
-export interface maFile {
+export interface MaFile {
     shared_secret: string,
     serial_number: string,
     revocation_code: string,

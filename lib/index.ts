@@ -2,8 +2,7 @@ import crypto from "crypto"
 import path from 'path'
 import {promises as fs} from "fs";
 import {readPromise} from "./utils";
-import {Manifest, maFile, Options} from "./types/sda";
-import {Entry} from "./types/sda";
+import {Manifest, MaFile, Options, Entry} from "./types/sda";
 const JSONbig = require('json-bigint')({ useNativeBigInt: true });
 
 /*
@@ -61,7 +60,7 @@ async function decryptData(password: string, encryptionSalt: string, encryptionI
  *     maFilePath: "./SDA/maFiles/account.maFile"
  * })
  */
-export default async function mafiles(manifestPath: string, steamid64: string | BigInt, options: Options|null = null): Promise<maFile | null> {
+export default async function mafiles(manifestPath: string, steamid64: string | BigInt, options: Options|null = null): Promise<MaFile | null> {
     const manifest: Manifest = JSONbig.parse((await fs.readFile(manifestPath)).toString())
 
     if (typeof steamid64 === "string")
@@ -96,3 +95,4 @@ export default async function mafiles(manifestPath: string, steamid64: string | 
 
     return null
 }
+export {MaFile} from "./types/sda"
